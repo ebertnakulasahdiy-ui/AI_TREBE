@@ -445,8 +445,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = input.toLowerCase();
         
         // Memory System - Learn Name
-        const nameMatch = text.match(/(?:nama saya|panggil saya|namaku) ([a-zA-Z\s]+)/);
-        if (nameMatch && nameMatch[1]) {
+        const nameMatch = text.match(/(?:nama saya|panggil saya|namaku|aku) ([a-zA-Z\s]+)/);
+        if (nameMatch && nameMatch[1] && !text.includes('apa')) {
             userName = nameMatch[1].trim();
             localStorage.setItem('nexai_username', userName);
             return `Salam kenal, **${userName}**! Senang bisa membantu Anda hari ini. Apa proyek yang sedang Anda kerjakan?`;
@@ -456,37 +456,70 @@ document.addEventListener('DOMContentLoaded', () => {
         if (text.includes('jam berapa') || text.includes('hari apa') || text.includes('tanggal berapa')) {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' };
-            return `Saat ini adalah **${now.toLocaleDateString('id-ID', options)}**. Waktu yang sangat tepat untuk menulis *code*!`;
+            return `Saat ini adalah **${now.toLocaleDateString('id-ID', options)}**. Waktu yang sangat tepat untuk memecahkan masalah kompleks!`;
+        }
+        
+        // Utilities - Weather (mock)
+        if (text.includes('cuaca')) {
+            return `Meskipun saya tidak memiliki akses real-time ke lokasi Anda, cuaca di dunia digital selalu cerah untuk *coding*! Pastikan Anda tetap terhidrasi selagi bekerja.`;
         }
 
         // Contextual Awareness
-        if (text.includes('sebelumnya') || text.includes('yang tadi')) {
+        if (text.includes('sebelumnya') || text.includes('yang tadi') || text.includes('lanjutkan')) {
             if (conversationHistory.length > 1) {
                 const lastTopic = conversationHistory[conversationHistory.length - 2];
-                return `Mengenai permintaan Anda sebelumnya: *"${lastTopic}"* ya? Jika Anda butuh revisi dari solusi tersebut, silakan beritahu bagian mana yang ingin diubah.`;
+                return `Mengenai permintaan Anda sebelumnya: *"${lastTopic}"* ya? Tentu, mari kita lanjutkan eksplorasi bagian tersebut. Bagian spesifik mana yang ingin di-optimasi?`;
             } else {
-                return `Maaf, sepertinya saya belum memiliki ingatan tentang topik sebelumnya di sesi ini. Bisa Anda ingatkan kembali?`;
+                return `Maaf, sepertinya saya belum memiliki ingatan tentang topik sebelumnya di sesi ini. Bisa Anda ingatkan kembali konteksnya?`;
             }
+        }
+        
+        // Deep Technical Analysis (Mock)
+        if (text.includes('bagaimana cara') && text.includes('arsitektur')) {
+            return `Untuk merancang arsitektur yang tangguh, kita perlu mempertimbangkan **Skalabilitas**, **Keamanan**, dan **Maintainability**.\n\nPendekatan terbaik biasanya melibatkan:\n1. **Microservices** atau **Modular Monolith** tergantung ukuran tim.\n2. **Event-Driven Architecture** (misal Kafka/RabbitMQ) untuk decoupling.\n3. **Caching Layer** (Redis) untuk performa baca yang tinggi.\n\nApakah Anda ingin melihat contoh diagram sistem untuk kasus spesifik?`;
+        }
+        
+        if (text.includes('database') || text.includes('sql') || text.includes('mongodb')) {
+             return `Memilih *database* yang tepat sangat krusial.\n\n- Gunakan **PostgreSQL/MySQL** jika data Anda sangat terstruktur dan membutuhkan transaksi ACID (misal: sistem finansial).\n- Gunakan **MongoDB** jika skema data sering berubah atau berbasis dokumen (JSON).\n- Gunakan **Redis** untuk *caching* dan antrean berkecepatan tinggi.\n\nIngin saya buatkan contoh skema tabel/koleksi untuk proyek Anda?`;
+        }
+        
+        if (text.includes('error') && text.includes('cors')) {
+            return `**CORS (Cross-Origin Resource Sharing)** error terjadi ketika *frontend* dan *backend* berada di domain/port yang berbeda. \n\n**Solusi Umum:**\nPastikan server *backend* Anda mengirim header:\n\`Access-Control-Allow-Origin: *\` (atau domain spesifik Anda)\n\nJika menggunakan Node.js (Express), gunakan *middleware* \`cors\`:\n\`\`\`javascript\nconst cors = require('cors');\napp.use(cors());\n\`\`\`\nBisa Anda tunjukkan teknologi *backend* apa yang Anda gunakan?`;
         }
 
         // Greetings
         if (text.match(/^(halo|hai|hello|hi|pagi|siang|sore|malam)/)) {
             const greetingName = userName ? ` **${userName}**` : '';
-            return `Halo${greetingName}! Saya **NexAI**, asisten pintar ruang kerja Anda. Ada yang bisa saya bantu hari ini?\n\nAnda bisa meminta saya untuk:\n- Menulis kode (React, Python, HTML/CSS)\n- Memperbaiki *bug* pada proyek Anda\n- Menjelaskan konsep pemrograman`;
+            return `Halo${greetingName}! Saya **NexAI**, asisten *Advanced Agentic* Anda. Sistem telah siap dan berjalan dalam performa maksimal. \n\nSaya dapat menangani:\n- Arsitektur Sistem & *Coding* (Fullstack)\n- Debugging & Refactoring\n- Analisis Data\n\nApa yang akan kita bangun hari ini?`;
         }
         
         // Identity / capability
-        if (text.includes('siapa kamu') || text.includes('kamu siapa') || text.includes('bisa apa')) {
-            return `Saya adalah **NexAI**, model *Advanced Agentic* yang dibangun untuk mendukung produktivitas tinggi. Saya dirancang khusus untuk memecahkan masalah pemrograman, menganalisis data, dan menyusun arsitektur sistem. \n\nCoba ketik instruksi spesifik, seperti: \`"Buatkan saya komponen React untuk tabel data"\`.`;
+        if (text.includes('siapa kamu') || text.includes('kamu siapa') || text.includes('bisa apa') || text.includes('kemampuan')) {
+            return `Saya adalah **NexAI**, model bahasa dan logika berbasis AI tingkat lanjut (*Advanced Agent*). Saya dirancang dengan fokus pada ketepatan teknis, analisis kode, dan penyelesaian masalah arsitektur *software*.\n\nSaya dilengkapi dengan memori kontekstual dan pemahaman semantik yang mendalam. Cobalah berikan saya masalah teknis yang sulit!`;
+        }
+        
+        if (text.includes('terima kasih') || text.includes('makasih') || text.includes('thank')) {
+             return `Sama-sama${userName ? ` ${userName}` : ''}! Senang bisa berkolaborasi dengan Anda. Jangan ragu untuk bertanya lagi jika menemui jalan buntu. Selamat *ngoding*!`;
         }
 
         // Math/Logic Simulation
-        if (text.includes('hitung') || text.match(/\d+[\+\-\*\/]\d+/)) {
+        if (text.includes('hitung') || text.match(/\d+\s*[\+\-\*\/]\s*\d+/)) {
+            try {
+                // Sangat sederhana kalkulator mockup
+                const mathMatch = text.match(/\d+\s*[\+\-\*\/]\s*\d+/);
+                if (mathMatch) {
+                    const mathStr = mathMatch[0];
+                    const result = new Function('return ' + mathStr)();
+                    return `Berdasarkan kalkulasi: **${mathStr} = ${result}**.\n\nUntuk komputasi atau algoritma tingkat lanjut, Anda bisa meminta saya membuatkan fungsi Python atau JavaScript yang teroptimasi.`;
+                }
+            } catch (e) {
+                // Fallback
+            }
             return `Untuk komputasi atau logika tingkat lanjut, saya sarankan Anda membuat skrip Python. Namun, jika ini perhitungan matematis sederhana, Anda bisa mencoba menggunakan Python di sini:\n\n\`\`\`python\n# Contoh operasi logika\nresult = eval("2 + 2") \nprint(result)\n\`\`\``;
         }
 
         // Framework / React
-        if (text.includes('react') || text.includes('landing page') || text.includes('next.js') || text.includes('vue') || text.includes('website')) {
+        if (text.includes('react') || text.includes('next.js') || text.includes('vue')) {
             return getReactMock();
         } 
         // Python / Backend
@@ -494,7 +527,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return getPythonMock();
         }
         // HTML/CSS/UI
-        if (text.includes('html') || text.includes('css') || text.includes('tombol') || text.includes('ui') || text.includes('tampilan') || text.includes('desain')) {
+        if (text.includes('html') || text.includes('css') || text.includes('tombol') || text.includes('ui') || text.includes('tampilan') || text.includes('desain') || text.includes('website')) {
             return getHtmlCssMock();
         }
         // Generic / Code related
@@ -504,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Fallback for general conversation
         const personalized = userName ? `, ${userName}` : '';
-        return `Saya mendeteksi pertanyaan Anda${personalized}:\n*"${input}"*\n\nSebagai asisten *coding*, saya dapat bekerja optimal jika Anda memberikan konteks teknis atau membagikan baris kode yang sedang Anda kerjakan. Namun, saya siap membantu merencanakan proyek, menganalisis masalah, atau sekadar berdiskusi.\n\nApakah ada studi kasus khusus atau bahasa pemrograman yang ingin kita bahas?`;
+        return `Saya menganalisis pertanyaan Anda${personalized}:\n*"${input}"*\n\nSebagai *Advanced Agent*, saya beroperasi paling baik dengan instruksi teknis yang detail. Apakah ada potongan kode (*code snippet*), *log error*, atau konsep arsitektur spesifik yang ingin kita bahas lebih dalam?`;
     }
 
     // --- Mock Data Generators (Structured Output) ---
