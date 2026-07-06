@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexAI - Advanced Agentic Workspace</title>
+    <title>AI TREBE - Asisten AI Cerdas Serba Bisa</title>
+    <meta name="description" content="AI TREBE - Asisten AI cerdas serba bisa untuk edukasi, pekerjaan, coding, dan kehidupan sehari-hari.">
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,8 +26,8 @@
     <div class="drag-drop-overlay" id="dragDropOverlay">
         <div class="drag-drop-content">
             <i class="fa-solid fa-cloud-arrow-up"></i>
-            <h3>Jatuhkan File ke Ruang Kerja</h3>
-            <p>Lepaskan mouse untuk menganalisis dokumen atau aset Anda.</p>
+            <h3>Jatuhkan File di Sini</h3>
+            <p>Lepaskan mouse untuk menganalisis dokumen Anda.</p>
         </div>
     </div>
 
@@ -35,8 +36,8 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <div class="logo-icon"><i class="fa-solid fa-layer-group"></i></div>
-                    <h2>NexAI Workspace</h2>
+                    <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
+                    <h2>AI TREBE</h2>
                 </div>
                 <button class="close-sidebar" id="closeSidebarBtn"><i class="fa-solid fa-xmark"></i></button>
             </div>
@@ -76,18 +77,16 @@
                 </div>
             </div>
 
-
-
             <div class="sidebar-footer">
                 <div class="footer-actions">
-                    <button class="icon-btn" id="memoryBtn" title="AI Memory Aktif - AI mengingat konteks sebelumnya"><i class="fa-solid fa-memory" style="color:var(--primary)"></i></button>
-                    <button class="icon-btn" id="settingsBtn" title="Pengaturan"><i class="fa-solid fa-gear"></i></button>
+                    <button class="icon-btn" id="memoryBtn" title="AI Memory Aktif"><i class="fa-solid fa-memory" style="color:var(--primary)"></i></button>
+                    <button class="icon-btn" id="logoutBtn" title="Keluar"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
-                <div class="user-profile">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Avatar" class="avatar">
+                <div class="user-profile" id="userProfileArea">
+                    <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff&size=150&bold=true" alt="Avatar" class="avatar" id="sidebarAvatar">
                     <div class="user-info">
-                        <span class="user-name">Developer Team</span>
-                        <span class="user-plan">Enterprise <i class="fa-solid fa-bolt" style="color:var(--warning);font-size:10px;"></i></span>
+                        <span class="user-name" id="sidebarUserName">User</span>
+                        <span class="user-plan">Premium <i class="fa-solid fa-bolt" style="color:var(--warning);font-size:10px;"></i></span>
                     </div>
                 </div>
             </div>
@@ -104,11 +103,11 @@
                 <!-- Model Selector -->
                 <div class="model-selector-wrapper">
                     <div class="model-selector">
-                        <i class="fa-solid fa-microchip"></i>
+                        <i class="fa-solid fa-brain"></i>
                         <select id="aiModelSelect" aria-label="Pilih Model AI">
-                            <option value="gpt-4o">GPT-4o (Advanced Agent)</option>
-                            <option value="gemini-1.5-pro" selected>Gemini 1.5 Pro (Deep Reasoning)</option>
-                            <option value="claude-3.5-sonnet">Claude 3.5 Sonnet (Coding Expert)</option>
+                            <option value="trebe-ultra" selected>AI TREBE Ultra</option>
+                            <option value="trebe-pro">AI TREBE Pro</option>
+                            <option value="trebe-lite">AI TREBE Lite</option>
                         </select>
                     </div>
                 </div>
@@ -117,7 +116,7 @@
                     <button class="theme-toggle-btn header-btn" id="themeToggleBtn" title="Ganti Tema" style="background:transparent; border:none; cursor:pointer;">
                         <i class="fa-solid fa-sun" id="themeIcon" style="color:var(--text-secondary); font-size:1.1rem;"></i>
                     </button>
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Profil" class="avatar" style="width:32px; height:32px; border-radius:50%; border:1px solid var(--border); cursor:pointer;">
+                    <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff&size=150&bold=true" alt="Profil" class="avatar" id="headerAvatar" style="width:32px; height:32px; border-radius:50%; border:1px solid var(--border); cursor:pointer;">
                 </div>
             </header>
 
@@ -127,9 +126,9 @@
                     
                     <!-- Empty State / Welcome -->
                     <div class="empty-state" id="emptyState">
-                        <div class="empty-logo"><i class="fa-solid fa-layer-group"></i></div>
-                        <h2>Siap membangun sesuatu hari ini?</h2>
-                        <p>Ketik instruksi atau berikan konteks untuk memulai.</p>
+                        <div class="empty-logo"><i class="fa-solid fa-brain"></i></div>
+                        <h2>Halo! Ada yang bisa saya bantu?</h2>
+                        <p>Tanyakan apa saja — edukasi, pekerjaan, coding, atau kehidupan sehari-hari.</p>
                     </div>
 
                 </div>
@@ -144,13 +143,13 @@
                 </div>
 
                 <div class="input-wrapper glass-panel">
-                    <button class="input-btn attach-btn" title="Upload File (Drag & Drop didukung)" id="uploadBtn">
+                    <button class="input-btn attach-btn" title="Upload File" id="uploadBtn">
                         <i class="fa-solid fa-paperclip"></i>
                     </button>
                     <textarea 
                         id="chatInput" 
                         rows="1" 
-                        placeholder="Ketik instruksi atau tempelkan kode... (Shift + Enter untuk baris baru)"></textarea>
+                        placeholder="Tanyakan apa saja... (Shift + Enter untuk baris baru)"></textarea>
                     <div class="input-controls">
                         <button class="send-btn" id="sendBtn" disabled><i class="fa-solid fa-arrow-up"></i></button>
                     </div>

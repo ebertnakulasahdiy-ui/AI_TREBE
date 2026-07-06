@@ -1,4 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Auth Gate ---
+    const session = localStorage.getItem('aitrebe_session');
+    if (!session) { window.location.href = 'login.html'; return; }
+    const sessionData = JSON.parse(session);
+
+    // Populate user info from session
+    const sidebarAvatar = document.getElementById('sidebarAvatar');
+    const headerAvatar = document.getElementById('headerAvatar');
+    const sidebarUserName = document.getElementById('sidebarUserName');
+    if (sidebarAvatar && sessionData.avatar) sidebarAvatar.src = sessionData.avatar;
+    if (headerAvatar && sessionData.avatar) headerAvatar.src = sessionData.avatar;
+    if (sidebarUserName && sessionData.name) sidebarUserName.textContent = sessionData.name;
+
     // --- Global Handlers ---
     window.showToast = function(message) {
         let toast = document.getElementById('app-toast');
@@ -61,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isFirstMessage = true;
     
     // NEW: Smart Memory & Context
-    let userName = localStorage.getItem('nexai_username') || null;
+    let userName = localStorage.getItem('aitrebe_username') || (sessionData ? sessionData.name : null);
     let conversationHistory = [];
 
     // --- Setup Markdown & Highlight.js ---
@@ -185,9 +198,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (settingsBtn) {
-        settingsBtn.addEventListener('click', () => {
-            window.location.href = 'pages/settings.html';
+    // Logout Button
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('aitrebe_session');
+            localStorage.removeItem('aitrebe_username');
+            window.location.href = 'login.html';
         });
     }
 
@@ -347,12 +364,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const initialHtml = `
             <div class="message ai-message fade-up" id="${messageId}">
                 <div class="message-avatar">
-                    <div class="ai-avatar"><i class="fa-solid fa-layer-group"></i></div>
+                    <div class="ai-avatar"><i class="fa-solid fa-brain"></i></div>
                 </div>
                 <div class="message-content-wrapper" style="max-width:100%; width:100%">
                     <div class="message-content ai-thinking">
                         <i class="fa-solid fa-circle-notch fa-spin"></i>
-                        <span class="thinking-text">Menganalisis arsitektur dan konteks...</span>
+                        <span class="thinking-text">Menganalisis pertanyaan Anda...</span>
                     </div>
                     <div class="message-content markdown-body ai-response-content" style="display:none;" id="${messageId}-content"></div>
                     <div class="ai-actions" id="actions-${messageId}" style="display:none; gap:12px; margin-top:12px; align-items:center;">
@@ -374,8 +391,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const thinkingInterval = setInterval(() => {
             thinkingPhase++;
-            if(thinkingPhase === 1) thinkingText.innerText = 'Merumuskan sintaks terbaik...';
-            if(thinkingPhase === 2) thinkingText.innerText = 'Mengoptimalkan performa kode...';
+            if(thinkingPhase === 1) thinkingText.innerText = 'Merumuskan jawaban terbaik...';
+            if(thinkingPhase === 2) thinkingText.innerText = 'Menyusun respons yang akurat...';
         }, 350);
 
         // 2. Transition to Streaming Phase after delay
@@ -448,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nameMatch = text.match(/(?:nama saya|panggil saya|namaku|aku) ([a-zA-Z\s]+)/);
         if (nameMatch && nameMatch[1] && !text.includes('apa')) {
             userName = nameMatch[1].trim();
-            localStorage.setItem('nexai_username', userName);
+            localStorage.setItem('aitrebe_username', userName);
             return `Salam kenal, **${userName}**! Senang bisa membantu Anda hari ini. Apa proyek yang sedang Anda kerjakan?`;
         }
 
@@ -488,18 +505,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Greetings
-        if (text.match(/^(halo|hai|hello|hi|pagi|siang|sore|malam)/)) {
+        if (text.match(/^(halo|hai|hello|hi|hey|pagi|siang|sore|malam|assalam)/)) {
             const greetingName = userName ? ` **${userName}**` : '';
-            return `Halo${greetingName}! Saya **NexAI**, asisten *Advanced Agentic* Anda. Sistem telah siap dan berjalan dalam performa maksimal. \n\nSaya dapat menangani:\n- Arsitektur Sistem & *Coding* (Fullstack)\n- Debugging & Refactoring\n- Analisis Data\n\nApa yang akan kita bangun hari ini?`;
+            return `Halo${greetingName}! Saya **AI TREBE**, asisten AI cerdas serba bisa. Siap membantu Anda!\n\nSaya bisa membantu berbagai hal:\n- 📚 **Edukasi** — Matematika, Fisika, Sejarah, Bahasa\n- 💼 **Pekerjaan** — Email, Laporan, Ide Pemasaran\n- 💻 **Teknis** — Coding, Debugging, Arsitektur\n- 🍳 **Kehidupan** — Resep, Liburan, Olahraga, Tips\n\nApa yang ingin Anda tanyakan hari ini?`;
         }
         
         // Identity / capability
         if (text.includes('siapa kamu') || text.includes('kamu siapa') || text.includes('bisa apa') || text.includes('kemampuan')) {
-            return `Saya adalah **NexAI**, model bahasa dan logika berbasis AI tingkat lanjut (*Advanced Agent*). Saya dirancang dengan fokus pada ketepatan teknis, analisis kode, dan penyelesaian masalah arsitektur *software*.\n\nSaya dilengkapi dengan memori kontekstual dan pemahaman semantik yang mendalam. Cobalah berikan saya masalah teknis yang sulit!`;
+            return `Saya adalah **AI TREBE**, asisten AI cerdas serba bisa yang dirancang untuk membantu Anda dalam berbagai aspek kehidupan.\n\n**Kemampuan saya meliputi:**\n- 📚 **Edukasi & Tugas** — Menyelesaikan soal matematika, menjelaskan teori fisika, merangkum jurnal ilmiah\n- 💼 **Pekerjaan & Bisnis** — Draft email profesional, menyusun laporan, ide konten pemasaran\n- 💻 **Teknis & Coding** — Menemukan error, menulis kode, arsitektur sistem\n- 🍳 **Kehidupan Sehari-hari** — Resep masakan, rencana liburan, tips olahraga & kesehatan\n- 🌍 **Pengetahuan Umum** — Sejarah, geografi, sains, budaya\n\nSilakan tanyakan apa saja!`;
         }
         
         if (text.includes('terima kasih') || text.includes('makasih') || text.includes('thank')) {
-             return `Sama-sama${userName ? ` ${userName}` : ''}! Senang bisa berkolaborasi dengan Anda. Jangan ragu untuk bertanya lagi jika menemui jalan buntu. Selamat *ngoding*!`;
+             return `Sama-sama${userName ? ` ${userName}` : ''}! Senang bisa membantu Anda. Jangan ragu untuk bertanya lagi kapan saja. Semoga harimu menyenangkan! 😊`;
         }
 
         // Math/Logic Simulation
@@ -518,26 +535,74 @@ document.addEventListener('DOMContentLoaded', () => {
             return `Untuk komputasi atau logika tingkat lanjut, saya sarankan Anda membuat skrip Python. Namun, jika ini perhitungan matematis sederhana, Anda bisa mencoba menggunakan Python di sini:\n\n\`\`\`python\n# Contoh operasi logika\nresult = eval("2 + 2") \nprint(result)\n\`\`\``;
         }
 
-        // Framework / React
+        // === EDUKASI & TUGAS ===
+        if (text.includes('matematika') || text.includes('rumus') || text.includes('aljabar') || text.includes('geometri') || text.includes('kalkulus') || text.includes('statistik')) {
+            return `## 📐 Matematika\n\nTentu, saya siap membantu soal matematika Anda! Berikut beberapa topik yang bisa saya jelaskan:\n\n- **Aljabar** — Persamaan linear, kuadrat, polinomial\n- **Geometri** — Luas, keliling, volume bangun ruang\n- **Kalkulus** — Turunan, integral, limit\n- **Statistik** — Mean, median, modus, standar deviasi\n\nSilakan kirimkan soal spesifik Anda dan saya akan menyelesaikannya langkah demi langkah! 📝`;
+        }
+        if (text.includes('fisika') || text.includes('gaya') || text.includes('newton') || text.includes('energi') || text.includes('listrik') || text.includes('gravitasi')) {
+            return `## ⚛️ Fisika\n\nMari kita bahas konsep fisika yang Anda tanyakan:\n\n**Hukum Newton:**\n1. Benda diam tetap diam kecuali ada gaya (*F = 0*)\n2. **F = m × a** (Gaya = massa × percepatan)\n3. Aksi = Reaksi\n\n**Rumus Penting:**\n- Energi Kinetik: \`Ek = ½mv²\`\n- Energi Potensial: \`Ep = mgh\`\n- Hukum Ohm: \`V = I × R\`\n\nKirimkan soal spesifik Anda untuk penjelasan detail! 🔬`;
+        }
+        if (text.includes('sejarah') || text.includes('perang dunia') || text.includes('kemerdekaan') || text.includes('kerajaan') || text.includes('revolusi')) {
+            return `## 📜 Sejarah\n\nSejarah adalah jendela untuk memahami masa kini. Beberapa topik yang bisa kita bahas:\n\n- **Sejarah Indonesia** — Kerajaan Majapahit, Sriwijaya, Proklamasi 1945\n- **Sejarah Dunia** — Perang Dunia I & II, Revolusi Industri, Perang Dingin\n- **Peradaban Kuno** — Mesir, Romawi, Yunani, Tiongkok\n\nTopik sejarah mana yang ingin Anda dalami? Saya bisa menjelaskan secara kronologis dan detail. 🏛️`;
+        }
+        if (text.includes('biologi') || text.includes('sel') || text.includes('dna') || text.includes('evolusi') || text.includes('ekosistem') || text.includes('fotosintesis')) {
+            return `## 🧬 Biologi\n\nMari kita jelajahi dunia biologi:\n\n**Topik Utama:**\n- **Sel** — Unit terkecil kehidupan (prokariota vs eukariota)\n- **Genetika** — DNA, RNA, pewarisan sifat Mendel\n- **Evolusi** — Teori Darwin, seleksi alam\n- **Ekologi** — Rantai makanan, ekosistem, biodiversitas\n- **Fotosintesis**: \`6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂\`\n\nApa topik spesifik yang ingin Anda pelajari? 🌿`;
+        }
+        if (text.includes('kimia') || text.includes('atom') || text.includes('unsur') || text.includes('reaksi kimia') || text.includes('mol') || text.includes('periodik')) {
+            return `## ⚗️ Kimia\n\nMari kita pelajari kimia bersama:\n\n- **Struktur Atom** — Proton, neutron, elektron\n- **Tabel Periodik** — Golongan, periode, sifat unsur\n- **Reaksi Kimia** — Penyetaraan persamaan, jenis reaksi\n- **Stoikiometri** — Perhitungan mol dan massa\n\nKirimkan soal atau konsep yang ingin Anda pahami! 🧪`;
+        }
+        if (text.includes('bahasa inggris') || text.includes('english') || text.includes('grammar') || text.includes('terjemah') || text.includes('translate') || text.includes('vocabulary')) {
+            return `## 🌐 Bahasa Inggris\n\nSaya bisa membantu Anda belajar bahasa Inggris:\n\n**Layanan yang tersedia:**\n- ✏️ **Grammar** — Tenses, articles, prepositions\n- 📖 **Vocabulary** — Kata-kata baru dengan konteks\n- 🔄 **Terjemahan** — Indonesia ↔ Inggris\n- ✍️ **Writing** — Koreksi esai, surat, email\n- 🗣️ **Conversation** — Frasa sehari-hari\n\nMau belajar apa hari ini? Kirimkan teks untuk diterjemahkan atau konsep grammar yang ingin dipelajari!`;
+        }
+
+        // === PEKERJAAN & BISNIS ===
+        if (text.includes('email') || text.includes('surat') || text.includes('draft')) {
+            return `## ✉️ Draft Email Profesional\n\nBerikut contoh template email profesional:\n\n---\n**Subject:** [Perihal Email Anda]\n\nYth. Bapak/Ibu [Nama],\n\nDengan hormat,\n\nSaya ingin menyampaikan [isi pesan Anda]. Terlampir dokumen yang relevan untuk referensi Bapak/Ibu.\n\nMohon kesediaan Bapak/Ibu untuk [aksi yang diminta]. Saya siap untuk mendiskusikan lebih lanjut pada waktu yang sesuai.\n\nAtas perhatian dan kerjasamanya, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Anda]\n[Jabatan]\n[Kontak]\n\n---\n\nBeritahu saya konteks spesifik email yang ingin Anda buat, dan saya akan menyesuaikannya! 📧`;
+        }
+        if (text.includes('laporan') || text.includes('report') || text.includes('presentasi')) {
+            return `## 📊 Menyusun Laporan\n\nBerikut struktur laporan profesional yang baik:\n\n### Kerangka Laporan:\n1. **Halaman Judul** — Judul, penulis, tanggal\n2. **Ringkasan Eksekutif** — Inti laporan dalam 1 paragraf\n3. **Pendahuluan** — Latar belakang & tujuan\n4. **Metodologi** — Cara pengumpulan data\n5. **Hasil & Analisis** — Data, grafik, temuan\n6. **Kesimpulan** — Rangkuman temuan utama\n7. **Rekomendasi** — Langkah selanjutnya\n8. **Lampiran** — Data pendukung\n\n**Tips:** Gunakan visualisasi data (grafik/tabel) untuk memperjelas poin Anda.\n\nBeritahu saya topik laporan Anda dan saya akan membantu menyusunnya! 📋`;
+        }
+        if (text.includes('pemasaran') || text.includes('marketing') || text.includes('konten') || text.includes('content') || text.includes('iklan') || text.includes('promosi')) {
+            return `## 📣 Ide Konten & Pemasaran\n\nBerikut strategi konten yang bisa Anda terapkan:\n\n**Tipe Konten Efektif:**\n- 🎥 **Video Pendek** — Reels/TikTok (15-60 detik)\n- 📝 **Carousel** — Tips/edukasi slide-by-slide\n- 📖 **Storytelling** — Cerita di balik brand Anda\n- 🎯 **CTA yang Kuat** — Ajakan bertindak yang jelas\n\n**Formula Copywriting AIDA:**\n1. **Attention** — Judul yang menarik perhatian\n2. **Interest** — Fakta/masalah yang relevan\n3. **Desire** — Solusi yang Anda tawarkan\n4. **Action** — Ajakan untuk bertindak\n\nMau saya buatkan contoh konten untuk produk/jasa spesifik Anda? 🚀`;
+        }
+
+        // === KEHIDUPAN SEHARI-HARI ===
+        if (text.includes('resep') || text.includes('masak') || text.includes('makanan') || text.includes('dapur') || text.includes('menu')) {
+            return `## 🍳 Resep & Masakan\n\nBerikut resep **Nasi Goreng Spesial** yang mudah dan lezat:\n\n### Bahan:\n- 2 piring nasi putih (sisa semalam lebih baik)\n- 2 butir telur\n- 3 siung bawang putih, cincang\n- 5 siung bawang merah, iris\n- 2 sdm kecap manis\n- 1 sdm saus tiram\n- Garam & merica secukupnya\n- Sayuran (sawi, wortel) secukupnya\n\n### Cara Membuat:\n1. Panaskan minyak, tumis bawang hingga harum\n2. Masukkan telur, orak-arik\n3. Tambahkan sayuran, aduk rata\n4. Masukkan nasi, kecap manis, saus tiram\n5. Aduk rata dengan api besar 3-5 menit\n6. Sajikan dengan kerupuk dan acar 🍽️\n\nMau resep lain? Beritahu bahan yang Anda punya!`;
+        }
+        if (text.includes('olahraga') || text.includes('fitness') || text.includes('gym') || text.includes('latihan') || text.includes('workout') || text.includes('push up') || text.includes('lari')) {
+            return `## 💪 Tips Olahraga & Fitness\n\n### Program Latihan Pemula (30 menit/hari):\n\n**Senin (Upper Body):**\n- Push-up: 3 × 10 repetisi\n- Plank: 3 × 30 detik\n- Arm circles: 2 × 20\n\n**Rabu (Lower Body):**\n- Squat: 3 × 15\n- Lunges: 3 × 10/kaki\n- Calf raises: 3 × 20\n\n**Jumat (Cardio):**\n- Jogging: 20 menit\n- Jumping jacks: 3 × 30 detik\n- Stretching: 10 menit\n\n**Tips Penting:**\n- 💧 Minum air minimal 2 liter/hari\n- 😴 Tidur 7-8 jam untuk pemulihan otot\n- 🥗 Konsumsi protein setelah latihan\n\nMau program yang lebih spesifik? Beritahu level dan tujuan Anda!`;
+        }
+        if (text.includes('liburan') || text.includes('wisata') || text.includes('travel') || text.includes('jalan-jalan') || text.includes('destinasi') || text.includes('hotel')) {
+            return `## ✈️ Rencana Liburan\n\nBerikut rekomendasi destinasi wisata populer di Indonesia:\n\n### 🏖️ Pantai & Alam:\n- **Bali** — Raja Ampat, Nusa Penida, Uluwatu\n- **Lombok** — Gili Trawangan, Pantai Kuta\n- **Labuan Bajo** — Pulau Komodo, Pink Beach\n\n### 🏔️ Pegunungan:\n- **Bromo** — Sunrise terbaik di Jawa\n- **Dieng** — Kawah, telaga, budaya\n- **Bandung** — Kawah Putih, Tangkuban Perahu\n\n### 🏛️ Budaya & Kota:\n- **Yogyakarta** — Borobudur, Prambanan, Malioboro\n- **Solo** — Keraton, Batik, kuliner\n\n**Tips Hemat:**\n- Booking jauh hari untuk harga terbaik\n- Pilih hari kerja untuk menghindari keramaian\n- Gunakan transportasi lokal\n\nMau saya buatkan itinerary detail untuk destinasi tertentu? 🗺️`;
+        }
+        if (text.includes('kesehatan') || text.includes('sakit') || text.includes('obat') || text.includes('diet') || text.includes('gizi') || text.includes('nutrisi') || text.includes('vitamin')) {
+            return `## 🏥 Tips Kesehatan\n\n**Kebiasaan Sehat yang Penting:**\n\n1. 💧 **Hidrasi** — Minum 8 gelas air per hari\n2. 🥗 **Nutrisi Seimbang** — Penuhi gizi: karbohidrat, protein, lemak sehat, serat\n3. 😴 **Tidur Berkualitas** — 7-9 jam per malam\n4. 🏃 **Olahraga Rutin** — Minimal 150 menit/minggu\n5. 🧘 **Kelola Stres** — Meditasi, hobi, quality time\n\n**Vitamin Penting:**\n- Vitamin C — Daya tahan tubuh (jeruk, jambu)\n- Vitamin D — Tulang kuat (sinar matahari pagi)\n- Vitamin B12 — Energi (daging, telur, susu)\n\n> ⚠️ *Disclaimer: Saya bukan pengganti dokter. Untuk keluhan serius, segera konsultasi ke tenaga medis profesional.*\n\nAda pertanyaan kesehatan spesifik?`;
+        }
+        if (text.includes('motivasi') || text.includes('semangat') || text.includes('sedih') || text.includes('galau') || text.includes('stress') || text.includes('bosan')) {
+            return `## 💫 Kata Motivasi\n\n> *"Kamu tidak harus sempurna untuk memulai. Tapi kamu harus memulai untuk menjadi lebih baik."*\n\n---\n\nBeberapa hal yang bisa membantu:\n\n1. 🎯 **Tetapkan tujuan kecil** — Mulai dari yang mudah dicapai\n2. 📝 **Tulis 3 hal yang disyukuri** setiap hari\n3. 🚶 **Bergerak** — Jalan kaki 15 menit bisa mengubah mood\n4. 🎵 **Dengarkan musik** yang membangkitkan semangat\n5. 💬 **Ceritakan** perasaanmu ke orang terdekat\n\n*Ingat: Setiap orang punya ritme masing-masing. Tidak apa-apa untuk istirahat sejenak.* Kamu sudah melakukan yang terbaik! 🌟\n\nMau cerita lebih lanjut? Saya di sini untuk mendengarkan.`;
+        }
+
+        // === TEKNIS & CODING ===
         if (text.includes('react') || text.includes('next.js') || text.includes('vue')) {
             return getReactMock();
         } 
-        // Python / Backend
         if (text.includes('python') || text.includes('scrap') || text.includes('api') || text.includes('backend') || text.includes('server')) {
             return getPythonMock();
         }
-        // HTML/CSS/UI
-        if (text.includes('html') || text.includes('css') || text.includes('tombol') || text.includes('ui') || text.includes('tampilan') || text.includes('desain') || text.includes('website')) {
+        if (text.includes('html') || text.includes('css') || text.includes('tombol') || text.includes('ui') || text.includes('tampilan') || text.includes('desain') || text.includes('website') || text.includes('landing page')) {
             return getHtmlCssMock();
         }
-        // Generic / Code related
-        if (text.includes('kode') || text.includes('script') || text.includes('error') || text.includes('bug') || text.includes('javascript') || text.includes('js')) {
+        if (text.includes('kode') || text.includes('script') || text.includes('error') || text.includes('bug') || text.includes('javascript') || text.includes('js') || text.includes('coding') || text.includes('programming')) {
             return getGeneralMock();
         }
+        if (text.includes('database') || text.includes('sql') || text.includes('mongodb')) {
+            return `## 🗄️ Database\n\nMemilih database yang tepat sangat krusial:\n\n- **PostgreSQL/MySQL** — Data terstruktur, transaksi ACID\n- **MongoDB** — Skema fleksibel, berbasis dokumen\n- **Redis** — Caching & antrean berkecepatan tinggi\n\nIngin saya buatkan contoh skema untuk proyek Anda?`;
+        }
 
-        // Fallback for general conversation
+        // Fallback — universal response
         const personalized = userName ? `, ${userName}` : '';
-        return `Saya menganalisis pertanyaan Anda${personalized}:\n*"${input}"*\n\nSebagai *Advanced Agent*, saya beroperasi paling baik dengan instruksi teknis yang detail. Apakah ada potongan kode (*code snippet*), *log error*, atau konsep arsitektur spesifik yang ingin kita bahas lebih dalam?`;
+        return `Terima kasih atas pertanyaannya${personalized}! 😊\n\nSaya menganalisis pesan Anda:\n> *"${input}"*\n\nSebagai **AI TREBE**, saya bisa membantu berbagai hal:\n- 📚 Edukasi (matematika, fisika, sejarah, bahasa)\n- 💼 Pekerjaan (email, laporan, ide bisnis)\n- 💻 Teknis (coding, debugging)\n- 🍳 Kehidupan (resep, liburan, kesehatan, olahraga)\n\nBisa Anda berikan detail lebih lanjut agar saya bisa memberikan jawaban yang lebih spesifik?`;
     }
 
     // --- Mock Data Generators (Structured Output) ---
