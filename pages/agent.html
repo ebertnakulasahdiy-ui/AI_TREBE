@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agents - NexAI Workspace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <app-sidebar active="agent"></app-sidebar>
+        
+        <main class="main-content">
+            <app-header title="AI Agents"></app-header>
+            
+            <div class="page-container">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                    <div>
+                        <h1>Daftar Agent</h1>
+                        <p style="color:var(--text-muted)">Pilih spesialis AI untuk proyek spesifik Anda.</p>
+                    </div>
+                    <button class="btn-primary" style="width:auto; padding:10px 20px;">+ Buat Custom Agent</button>
+                </div>
+
+                <div class="grid-container">
+                    <div class="card" onclick="window.location.href='chat.html'">
+                        <div class="card-icon"><i class="fa-solid fa-code"></i></div>
+                        <div class="card-title">Web Developer</div>
+                        <div class="card-desc">Ahli dalam React, Node.js, dan arsitektur web modern.</div>
+                    </div>
+                    <div class="card" onclick="window.location.href='chat.html'">
+                        <div class="card-icon"><i class="fa-solid fa-pen-nib"></i></div>
+                        <div class="card-title">UI/UX Designer</div>
+                        <div class="card-desc">Spesialis desain visual, wireframing, dan aksesibilitas.</div>
+                    </div>
+                    <div class="card" onclick="window.location.href='chat.html'">
+                        <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="card-title">SEO Expert</div>
+                        <div class="card-desc">Optimasi mesin pencari dan strategi konten organik.</div>
+                    </div>
+                    <div class="card" onclick="window.location.href='chat.html'">
+                        <div class="card-icon"><i class="fa-solid fa-bullhorn"></i></div>
+                        <div class="card-title">Marketing Copywriter</div>
+                        <div class="card-desc">Menulis copy iklan, landing page, dan email yang berkonversi.</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/components.js"></script>
+    <script src="../assets/js/app.js"></script>
+</body>
+</html>

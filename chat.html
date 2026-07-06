@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexAI - Advanced Agentic Workspace</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Highlight.js for Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" id="highlightTheme">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div id="particles-js" class="particles-bg" aria-hidden="true"></div>
+    <div class="background-glow" aria-hidden="true"></div>
+
+    <!-- Drag & Drop Overlay -->
+    <div class="drag-drop-overlay" id="dragDropOverlay">
+        <div class="drag-drop-content">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <h3>Jatuhkan File ke Ruang Kerja</h3>
+            <p>Lepaskan mouse untuk menganalisis dokumen atau aset Anda.</p>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <h2>NexAI Workspace</h2>
+                </div>
+                <button class="close-sidebar" id="closeSidebarBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Search Conversation -->
+            <div class="sidebar-search">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Cari... (Ctrl+K)" id="searchInput">
+                </div>
+            </div>
+
+            <button class="new-chat-btn" id="newChatBtn">
+                <div class="btn-left">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Sesi Baru</span>
+                </div>
+                <span class="shortcut-hint">Ctrl+N</span>
+            </button>
+
+            <!-- Navigasi Utama -->
+            <div class="sidebar-scroll-area">
+                <div class="sidebar-section">
+                    <ul class="nav-list">
+                        <li class="nav-item active"><i class="fa-regular fa-message"></i> Chat</li>
+                        <li class="nav-item"><i class="fa-solid fa-robot"></i> Agent</li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="section-title">
+                        <span><i class="fa-regular fa-clock"></i> Riwayat Chat</span>
+                    </h3>
+                    <ul class="nav-list" id="chatHistoryList">
+                        <li class="nav-item" style="color:var(--text-muted); font-size:12px; font-style:italic;">Belum ada percakapan</li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            <div class="sidebar-footer">
+                <div class="footer-actions">
+                    <button class="icon-btn" id="memoryBtn" title="AI Memory Aktif - AI mengingat konteks sebelumnya"><i class="fa-solid fa-memory" style="color:var(--primary)"></i></button>
+                    <button class="icon-btn" id="settingsBtn" title="Pengaturan"><i class="fa-solid fa-gear"></i></button>
+                </div>
+                <div class="user-profile">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Avatar" class="avatar">
+                    <div class="user-info">
+                        <span class="user-name">Developer Team</span>
+                        <span class="user-plan">Enterprise <i class="fa-solid fa-bolt" style="color:var(--warning);font-size:10px;"></i></span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="chat-header">
+                <div class="header-left">
+                    <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+                </div>
+                
+                <!-- Model Selector -->
+                <div class="model-selector-wrapper">
+                    <div class="model-selector">
+                        <i class="fa-solid fa-microchip"></i>
+                        <select id="aiModelSelect" aria-label="Pilih Model AI">
+                            <option value="gpt-4o">GPT-4o (Advanced Agent)</option>
+                            <option value="gemini-1.5-pro" selected>Gemini 1.5 Pro (Deep Reasoning)</option>
+                            <option value="claude-3.5-sonnet">Claude 3.5 Sonnet (Coding Expert)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="theme-toggle-btn header-btn" id="themeToggleBtn" title="Ganti Tema" style="background:transparent; border:none; cursor:pointer;">
+                        <i class="fa-solid fa-sun" id="themeIcon" style="color:var(--text-secondary); font-size:1.1rem;"></i>
+                    </button>
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Profil" class="avatar" style="width:32px; height:32px; border-radius:50%; border:1px solid var(--border); cursor:pointer;">
+                </div>
+            </header>
+
+            <!-- Chat Area -->
+            <div class="chat-area" id="chatArea">
+                <div class="chat-container" id="chatContainer">
+                    
+                    <!-- Empty State / Welcome -->
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-logo"><i class="fa-solid fa-layer-group"></i></div>
+                        <h2>Siap membangun sesuatu hari ini?</h2>
+                        <p>Ketik instruksi atau berikan konteks untuk memulai.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="action-buttons-container" id="actionButtons" style="display: none;">
+                    <button class="action-btn stop-btn" id="stopBtn">
+                        <i class="fa-solid fa-stop"></i> Stop Generating
+                    </button>
+                </div>
+
+                <div class="input-wrapper glass-panel">
+                    <button class="input-btn attach-btn" title="Upload File (Drag & Drop didukung)" id="uploadBtn">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </button>
+                    <textarea 
+                        id="chatInput" 
+                        rows="1" 
+                        placeholder="Ketik instruksi atau tempelkan kode... (Shift + Enter untuk baris baru)"></textarea>
+                    <div class="input-controls">
+                        <button class="send-btn" id="sendBtn" disabled><i class="fa-solid fa-arrow-up"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- Custom Logic -->
+    <script src="chat.js"></script>
+</body>
+</html>

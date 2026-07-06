@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NexAI Workspace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1><i class="fa-solid fa-layer-group" style="color:var(--primary)"></i> NexAI</h1>
+                <p>Masuk ke Workspace cerdas Anda</p>
+            </div>
+            
+            <button class="btn-social" onclick="window.location.href='dashboard.html'">
+                <i class="fa-brands fa-google"></i> Lanjutkan dengan Google
+            </button>
+            <button class="btn-social" onclick="window.location.href='dashboard.html'">
+                <i class="fa-brands fa-github"></i> Lanjutkan dengan GitHub
+            </button>
+            
+            <div style="display:flex; align-items:center; margin: 24px 0; color:var(--text-muted); font-size:12px;">
+                <hr style="flex:1; border:none; border-top:1px solid var(--border);">
+                <span style="padding:0 10px;">ATAU DENGAN EMAIL</span>
+                <hr style="flex:1; border:none; border-top:1px solid var(--border);">
+            </div>
+
+            <form action="dashboard.html" method="GET">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" class="form-control" placeholder="nama@perusahaan.com" required>
+                </div>
+                <div class="form-group">
+                    <label style="display:flex; justify-content:space-between;">
+                        Password
+                        <a href="forgot-password.html" style="color:var(--text-muted); font-weight:normal;">Lupa password?</a>
+                    </label>
+                    <input type="password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">Masuk</button>
+            </form>
+            
+            <div class="auth-footer">
+                Belum punya akun? <a href="register.html">Daftar sekarang</a>
+            </div>
+        </div>
+    </div>
+    <script src="../assets/js/app.js"></script>
+</body>
+</html>
