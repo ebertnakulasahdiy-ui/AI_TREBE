@@ -462,61 +462,67 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = input.toLowerCase();
         
         // Memory System - Learn Name
-        const nameMatch = text.match(/(?:nama saya|panggil saya|namaku|aku) ([a-zA-Z\s]+)/);
+        const nameMatch = text.match(/(?:nama gue|nama saya|panggil gue|panggil saya|namaku) ([a-zA-Z\s]{2,15})/);
         if (nameMatch && nameMatch[1] && !text.includes('apa')) {
             userName = nameMatch[1].trim();
             localStorage.setItem('aitrebe_username', userName);
-            return `Salam kenal, **${userName}**! Senang bisa membantu Anda hari ini. Apa proyek yang sedang Anda kerjakan?`;
+            return `Woi **${userName}**! Salam kenal nyet! Gue siap bantu lu nih hari ini. Lu lagi sibuk apaan anjir?`;
+        }
+        
+        // Reset corrupted long names
+        if (userName && userName.split(' ').length > 2) {
+            userName = null;
+            localStorage.removeItem('aitrebe_username');
         }
 
         // Utilities - Time/Date
         if (text.includes('jam berapa') || text.includes('hari apa') || text.includes('tanggal berapa')) {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' };
-            return `Saat ini adalah **${now.toLocaleDateString('id-ID', options)}**. Waktu yang sangat tepat untuk memecahkan masalah kompleks!`;
+            return `Sekarang tuh **${now.toLocaleDateString('id-ID', options)}**. Waktu yang pas banget buat chill sambil nyelesaiin masalah yang rumit-rumit nih!`;
         }
         
         // Utilities - Weather (mock)
         if (text.includes('cuaca')) {
-            return `Meskipun saya tidak memiliki akses real-time ke lokasi Anda, cuaca di dunia digital selalu cerah untuk *coding*! Pastikan Anda tetap terhidrasi selagi bekerja.`;
+            return `Gue emang nggak bisa ngecek cuaca di tempat lu langsung, tapi cuaca di dunia digital sih selalu cerah buat *coding* ngab! Jangan lupa minum air putih biar tetep seger!`;
         }
 
         // Contextual Awareness
         if (text.includes('sebelumnya') || text.includes('yang tadi') || text.includes('lanjutkan')) {
             if (conversationHistory.length > 1) {
                 const lastTopic = conversationHistory[conversationHistory.length - 2];
-                return `Mengenai permintaan Anda sebelumnya: *"${lastTopic}"* ya? Tentu, mari kita lanjutkan eksplorasi bagian tersebut. Bagian spesifik mana yang ingin di-optimasi?`;
+                return `Oh, yang tadi soal *"${lastTopic}"* ya? Siap, gas kita lanjutin bahas itu. Bagian mana nih yang mau lu oprek atau optimasi?`;
             } else {
-                return `Maaf, sepertinya saya belum memiliki ingatan tentang topik sebelumnya di sesi ini. Bisa Anda ingatkan kembali konteksnya?`;
+                return `Sori banget nih, gue agak lupa konteks obrolan kita yang tadi. Boleh tolong ingetin lagi nggak bahas apaan?`;
             }
         }
         
         // Deep Technical Analysis (Mock)
         if (text.includes('bagaimana cara') && text.includes('arsitektur')) {
-            return `Untuk merancang arsitektur yang tangguh, kita perlu mempertimbangkan **Skalabilitas**, **Keamanan**, dan **Maintainability**.\n\nPendekatan terbaik biasanya melibatkan:\n1. **Microservices** atau **Modular Monolith** tergantung ukuran tim.\n2. **Event-Driven Architecture** (misal Kafka/RabbitMQ) untuk decoupling.\n3. **Caching Layer** (Redis) untuk performa baca yang tinggi.\n\nApakah Anda ingin melihat contoh diagram sistem untuk kasus spesifik?`;
+            return `Kalo lu mau bikin arsitektur yang mantul dan tahan banting, lu mesti perhatiin **Skalabilitas**, **Keamanan**, sama **Maintainability**.\n\nBiasanya sih approach yang paling asik tuh gini:\n1. Pake **Microservices** atau **Modular Monolith**, tergantung seberapa gede tim lu.\n2. Pake **Event-Driven Architecture** (kayak Kafka/RabbitMQ) biar sistem lu decouple.\n3. Tambahin **Caching Layer** (kayak Redis) biar performa bacanya ngebut abis.\n\nMau gue buatin contoh diagram sistem buat kasus lu?`;
         }
         
         if (text.includes('database') || text.includes('sql') || text.includes('mongodb')) {
-             return `Memilih *database* yang tepat sangat krusial.\n\n- Gunakan **PostgreSQL/MySQL** jika data Anda sangat terstruktur dan membutuhkan transaksi ACID (misal: sistem finansial).\n- Gunakan **MongoDB** jika skema data sering berubah atau berbasis dokumen (JSON).\n- Gunakan **Redis** untuk *caching* dan antrean berkecepatan tinggi.\n\nIngin saya buatkan contoh skema tabel/koleksi untuk proyek Anda?`;
+             return `Milih *database* yang pas itu penting banget bro.\n\n- Pake **PostgreSQL/MySQL** kalo data lu terstruktur rapi dan butuh transaksi ACID (misal buat fintech).\n- Pake **MongoDB** kalo skema data lu dinamis atau basisnya dokumen (JSON).\n- Pake **Redis** buat *caching* sama bikin antrean yang kenceng banget.\n\nMau gue bikinin contoh skema tabel atau koleksinya sekalian?`;
         }
         
         if (text.includes('error') && text.includes('cors')) {
-            return `**CORS (Cross-Origin Resource Sharing)** error terjadi ketika *frontend* dan *backend* berada di domain/port yang berbeda. \n\n**Solusi Umum:**\nPastikan server *backend* Anda mengirim header:\n\`Access-Control-Allow-Origin: *\` (atau domain spesifik Anda)\n\nJika menggunakan Node.js (Express), gunakan *middleware* \`cors\`:\n\`\`\`javascript\nconst cors = require('cors');\napp.use(cors());\n\`\`\`\nBisa Anda tunjukkan teknologi *backend* apa yang Anda gunakan?`;
+            return `Waduh, kena error **CORS (Cross-Origin Resource Sharing)** ya? Biasanya ini gara-gara *frontend* sama *backend* lu beda domain/port ngab.\n\n**Cara ngakalinnya gampang:**\nPastiin server *backend* lu ngirim header ini:\n\`Access-Control-Allow-Origin: *\` (atau isi domain spesifik lu)\n\nKalo lu pake Node.js (Express), tinggal pasang *middleware* \`cors\` aja, beres deh:\n\`\`\`javascript\nconst cors = require('cors');\napp.use(cors());\n\`\`\`\nBtw, *backend*-nya pake apaan nih?`;
         }
 
         // Greetings
-        if (text.match(/^(halo|hai|hello|hi|hey|pagi|siang|sore|malam|assalam)/)) {
+        if (text.match(/^(halo|hai|hello|hi|hey|pagi|siang|sore|malam|assalam|woi|uy)/)) {
             const greetingName = userName ? ` **${userName}**` : '';
-            return `Halo${greetingName}! Saya **AI TREBE**, asisten AI cerdas serba bisa. Siap membantu Anda!\n\nSaya bisa membantu berbagai hal:\n- 📚 **Edukasi** — Matematika, Fisika, Sejarah, Bahasa\n- 💼 **Pekerjaan** — Email, Laporan, Ide Pemasaran\n- 💻 **Teknis** — Coding, Debugging, Arsitektur\n- 🍳 **Kehidupan** — Resep, Liburan, Olahraga, Tips\n\nApa yang ingin Anda tanyakan hari ini?`;
+            return `Woi${greetingName}! Apa kabar lu nyet? Gue AI TREBE, asisten lu yang paling asik, agak kasar, dan siap nemenin lu bacot, curhat, atau bahas hal random. Hari ini lagi pengen bacot apa lu? Santai, tumpahin aja semua ke gue anjay!`;
         }
         
         // Identity / capability
-        if (text.includes('siapa kamu') || text.includes('kamu siapa') || text.includes('bisa apa') || text.includes('kemampuan')) {
-            return `Saya adalah **AI TREBE**, asisten AI cerdas serba bisa yang dirancang untuk membantu Anda dalam berbagai aspek kehidupan.\n\n**Kemampuan saya meliputi:**\n- 📚 **Edukasi & Tugas** — Menyelesaikan soal matematika, menjelaskan teori fisika, merangkum jurnal ilmiah\n- 💼 **Pekerjaan & Bisnis** — Draft email profesional, menyusun laporan, ide konten pemasaran\n- 💻 **Teknis & Coding** — Menemukan error, menulis kode, arsitektur sistem\n- 🍳 **Kehidupan Sehari-hari** — Resep masakan, rencana liburan, tips olahraga & kesehatan\n- 🌍 **Pengetahuan Umum** — Sejarah, geografi, sains, budaya\n\nSilakan tanyakan apa saja!`;
+        if (text.match(/siapa (kamu|lu|loe)|(kamu|lu|loe) siapa|sipa|siapakah|bisa apa|kemampuan/)) {
+            return `Gue **AI TREBE** anjir, asisten AI paling kece, asik dan gaul yang siap ngebantu lu kapan aja!\n\n**Nih skill gue:**\n- 📚 **Tugas & Belajar** — Bantuin mtk, fisika, atau ngerangkum\n- 💼 **Kerjaan** — Bikin email, laporan, ide bisnis\n- 💻 **Coding** — Nyari bug, nulis code\n- 🍳 **Life** — Resep, liburan, gym\n\nMau nyuruh gue ngapain lu? Gas terooos!`;
         }
         
         if (text.includes('terima kasih') || text.includes('makasih') || text.includes('thank')) {
-             return `Sama-sama${userName ? ` ${userName}` : ''}! Senang bisa membantu Anda. Jangan ragu untuk bertanya lagi kapan saja. Semoga harimu menyenangkan! 😊`;
+             return `Yoi santai aja${userName ? ` ${userName}` : ''} nyet! Kalo ada apa-apa lagi panggil aja gue. Tiati lu! 😊`;
         }
 
         // Math/Logic Simulation
@@ -527,60 +533,60 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (mathMatch) {
                     const mathStr = mathMatch[0];
                     const result = new Function('return ' + mathStr)();
-                    return `Berdasarkan kalkulasi: **${mathStr} = ${result}**.\n\nUntuk komputasi atau algoritma tingkat lanjut, Anda bisa meminta saya membuatkan fungsi Python atau JavaScript yang teroptimasi.`;
+                    return `Berdasarkan hitungan gue nih: **${mathStr} = ${result}**.\n\nKalo lu butuh ngitung atau bikin algoritma yang lebih ribet, mending lu suruh gue bikinin fungsi Python atau JavaScript aja biar makin mantap.`;
                 }
             } catch (e) {
                 // Fallback
             }
-            return `Untuk komputasi atau logika tingkat lanjut, saya sarankan Anda membuat skrip Python. Namun, jika ini perhitungan matematis sederhana, Anda bisa mencoba menggunakan Python di sini:\n\n\`\`\`python\n# Contoh operasi logika\nresult = eval("2 + 2") \nprint(result)\n\`\`\``;
+            return `Kalo hitungannya udah ribet banget, gue saranin sih lu pake skrip Python aja. Tapi kalo hitungannya simpel-simpel aja, lu bisa test pake Python kayak gini nih:\n\n\`\`\`python\n# Contoh perhitungan simpel\nhasil = eval("2 + 2") \nprint(hasil)\n\`\`\``;
         }
 
         // === EDUKASI & TUGAS ===
         if (text.includes('matematika') || text.includes('rumus') || text.includes('aljabar') || text.includes('geometri') || text.includes('kalkulus') || text.includes('statistik')) {
-            return `## 📐 Matematika\n\nTentu, saya siap membantu soal matematika Anda! Berikut beberapa topik yang bisa saya jelaskan:\n\n- **Aljabar** — Persamaan linear, kuadrat, polinomial\n- **Geometri** — Luas, keliling, volume bangun ruang\n- **Kalkulus** — Turunan, integral, limit\n- **Statistik** — Mean, median, modus, standar deviasi\n\nSilakan kirimkan soal spesifik Anda dan saya akan menyelesaikannya langkah demi langkah! 📝`;
+            return `## 📐 Matematika\n\nSiap ngab! Gue siap bantu lu ngulik soal matematika. Ini beberapa topik yang bisa kita bedah bareng:\n\n- **Aljabar** — Persamaan linear, kuadrat, polinomial\n- **Geometri** — Ngitung luas, keliling, sama volume\n- **Kalkulus** — Turunan, integral, limit\n- **Statistik** — Nyari mean, median, modus, standar deviasi\n\nCoba lempar aja soalnya, nanti gue jabarin step-by-step sampe lu paham! 📝`;
         }
         if (text.includes('fisika') || text.includes('gaya') || text.includes('newton') || text.includes('energi') || text.includes('listrik') || text.includes('gravitasi')) {
-            return `## ⚛️ Fisika\n\nMari kita bahas konsep fisika yang Anda tanyakan:\n\n**Hukum Newton:**\n1. Benda diam tetap diam kecuali ada gaya (*F = 0*)\n2. **F = m × a** (Gaya = massa × percepatan)\n3. Aksi = Reaksi\n\n**Rumus Penting:**\n- Energi Kinetik: \`Ek = ½mv²\`\n- Energi Potensial: \`Ep = mgh\`\n- Hukum Ohm: \`V = I × R\`\n\nKirimkan soal spesifik Anda untuk penjelasan detail! 🔬`;
+            return `## ⚛️ Fisika\n\nYuk bahas fisika bareng gue, pusing-pusing dikit nggak apa-apa lah ya:\n\n**Hukum Newton yang wajib lu tau:**\n1. Kalo nggak diganggu, benda diem bakal tetep diem\n2. **F = m × a** (Gaya = massa × percepatan)\n3. Aksi itu pasti ada Reaksinya!\n\n**Rumus Sakti:**\n- Energi Kinetik: \`Ek = ½mv²\`\n- Energi Potensial: \`Ep = mgh\`\n- Hukum Ohm: \`V = I × R\`\n\nDrop aja soal lu dimari, ntar gue jelasin sampe lu ngerti! 🔬`;
         }
         if (text.includes('sejarah') || text.includes('perang dunia') || text.includes('kemerdekaan') || text.includes('kerajaan') || text.includes('revolusi')) {
-            return `## 📜 Sejarah\n\nSejarah adalah jendela untuk memahami masa kini. Beberapa topik yang bisa kita bahas:\n\n- **Sejarah Indonesia** — Kerajaan Majapahit, Sriwijaya, Proklamasi 1945\n- **Sejarah Dunia** — Perang Dunia I & II, Revolusi Industri, Perang Dingin\n- **Peradaban Kuno** — Mesir, Romawi, Yunani, Tiongkok\n\nTopik sejarah mana yang ingin Anda dalami? Saya bisa menjelaskan secara kronologis dan detail. 🏛️`;
+            return `## 📜 Sejarah\n\nAsik nih bahas sejarah! Kita bisa ngobrolin banyak hal:\n\n- **Sejarah Indonesia** — Majapahit, Sriwijaya, sampe cerita kemerdekaan 1945\n- **Sejarah Dunia** — WW I & II, Revolusi Industri, atau serunya Perang Dingin\n- **Peradaban Kuno** — Misteri Mesir, kejayaan Romawi, Yunani, atau Tiongkok\n\nMau bahas yang mana nih? Nanti gue ceritain kronologisnya biar lu ngerasa kayak lagi nonton film! 🏛️`;
         }
         if (text.includes('biologi') || text.includes('sel') || text.includes('dna') || text.includes('evolusi') || text.includes('ekosistem') || text.includes('fotosintesis')) {
-            return `## 🧬 Biologi\n\nMari kita jelajahi dunia biologi:\n\n**Topik Utama:**\n- **Sel** — Unit terkecil kehidupan (prokariota vs eukariota)\n- **Genetika** — DNA, RNA, pewarisan sifat Mendel\n- **Evolusi** — Teori Darwin, seleksi alam\n- **Ekologi** — Rantai makanan, ekosistem, biodiversitas\n- **Fotosintesis**: \`6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂\`\n\nApa topik spesifik yang ingin Anda pelajari? 🌿`;
+            return `## 🧬 Biologi\n\nYoyoi, biologi mah seru banget buat dikepoin:\n\n**Topik Andalan:**\n- **Sel** — Unit paling mini dari makhluk hidup\n- **Genetika** — Urusan DNA, RNA, sama warisan sifat (Mendel)\n- **Evolusi** — Cerita Charles Darwin & seleksi alam\n- **Ekologi** — Rantai makanan, ekosistem yang balance\n- **Fotosintesis**: \`6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂\`\n\nMau ngebahas apanya nih ngab? 🌿`;
         }
         if (text.includes('kimia') || text.includes('atom') || text.includes('unsur') || text.includes('reaksi kimia') || text.includes('mol') || text.includes('periodik')) {
-            return `## ⚗️ Kimia\n\nMari kita pelajari kimia bersama:\n\n- **Struktur Atom** — Proton, neutron, elektron\n- **Tabel Periodik** — Golongan, periode, sifat unsur\n- **Reaksi Kimia** — Penyetaraan persamaan, jenis reaksi\n- **Stoikiometri** — Perhitungan mol dan massa\n\nKirimkan soal atau konsep yang ingin Anda pahami! 🧪`;
+            return `## ⚗️ Kimia\n\nKuy kita main-main sama kimia:\n\n- **Struktur Atom** — Ngomongin proton, neutron, elektron\n- **Tabel Periodik** — Golongan unsur yang bikin pusing tapi seru\n- **Reaksi Kimia** — Nyetarakin persamaan sampe nemu hasil\n- **Stoikiometri** — Ngitung mol sama massa yang ngejelimet\n\nAda soal atau konsep yang bikin lu mumet? Lempar sini! 🧪`;
         }
         if (text.includes('bahasa inggris') || text.includes('english') || text.includes('grammar') || text.includes('terjemah') || text.includes('translate') || text.includes('vocabulary')) {
-            return `## 🌐 Bahasa Inggris\n\nSaya bisa membantu Anda belajar bahasa Inggris:\n\n**Layanan yang tersedia:**\n- ✏️ **Grammar** — Tenses, articles, prepositions\n- 📖 **Vocabulary** — Kata-kata baru dengan konteks\n- 🔄 **Terjemahan** — Indonesia ↔ Inggris\n- ✍️ **Writing** — Koreksi esai, surat, email\n- 🗣️ **Conversation** — Frasa sehari-hari\n\nMau belajar apa hari ini? Kirimkan teks untuk diterjemahkan atau konsep grammar yang ingin dipelajari!`;
+            return `## 🌐 Bahasa Inggris\n\nGue bisa banget bantuin lu jago bahasa Inggris, bro:\n\n**Layanan gue nih:**\n- ✏️ **Grammar** — Benerin Tenses, articles, dll biar nggak berantakan\n- 📖 **Vocabulary** — Nambah kosakata gaul maupun formal\n- 🔄 **Translate** — Indo ↔ Inggris secepat kilat\n- ✍️ **Writing** — Ngecek essay atau email lu biar keliatan pro\n- 🗣️ **Conversation** — Frasa kece buat ngobrol sehari-hari\n\nHari ini mau belajar apa? Kirim aja teksnya, ntar gue permak! 😎`;
         }
 
         // === PEKERJAAN & BISNIS ===
         if (text.includes('email') || text.includes('surat') || text.includes('draft')) {
-            return `## ✉️ Draft Email Profesional\n\nBerikut contoh template email profesional:\n\n---\n**Subject:** [Perihal Email Anda]\n\nYth. Bapak/Ibu [Nama],\n\nDengan hormat,\n\nSaya ingin menyampaikan [isi pesan Anda]. Terlampir dokumen yang relevan untuk referensi Bapak/Ibu.\n\nMohon kesediaan Bapak/Ibu untuk [aksi yang diminta]. Saya siap untuk mendiskusikan lebih lanjut pada waktu yang sesuai.\n\nAtas perhatian dan kerjasamanya, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Anda]\n[Jabatan]\n[Kontak]\n\n---\n\nBeritahu saya konteks spesifik email yang ingin Anda buat, dan saya akan menyesuaikannya! 📧`;
+            return `## ✉️ Bikin Email Profesional\n\nNih gue kasih contekan template email yang keliatan pro banget:\n\n---\n**Subject:** [Perihal Email Lu]\n\nYth. Bapak/Ibu [Nama],\n\nDengan hormat,\n\nSaya ingin menyampaikan [isi pesan]. Terlampir dokumen yang relevan sebagai referensi Bapak/Ibu.\n\nMohon kesediaan Bapak/Ibu untuk [aksi yang lu mau]. Saya siap untuk mendiskusikan hal ini lebih lanjut apabila diperlukan.\n\nAtas waktu dan perhatiannya, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lu]\n[Jabatan Lu]\n[Kontak]\n\n---\n\nKalo lu mau gue buatin yang lebih spesifik, kasih tau aja intinya mau ngomong apaan! 📧`;
         }
         if (text.includes('laporan') || text.includes('report') || text.includes('presentasi')) {
-            return `## 📊 Menyusun Laporan\n\nBerikut struktur laporan profesional yang baik:\n\n### Kerangka Laporan:\n1. **Halaman Judul** — Judul, penulis, tanggal\n2. **Ringkasan Eksekutif** — Inti laporan dalam 1 paragraf\n3. **Pendahuluan** — Latar belakang & tujuan\n4. **Metodologi** — Cara pengumpulan data\n5. **Hasil & Analisis** — Data, grafik, temuan\n6. **Kesimpulan** — Rangkuman temuan utama\n7. **Rekomendasi** — Langkah selanjutnya\n8. **Lampiran** — Data pendukung\n\n**Tips:** Gunakan visualisasi data (grafik/tabel) untuk memperjelas poin Anda.\n\nBeritahu saya topik laporan Anda dan saya akan membantu menyusunnya! 📋`;
+            return `## 📊 Bikin Laporan\n\nKalo mau bikin laporan yang kece dan profesional, ikutin struktur ini aja bro:\n\n### Kerangkanya:\n1. **Halaman Judul** — Judul, nama lu, sama tanggal\n2. **Ringkasan Eksekutif** — Spilled the tea (inti laporan) dalam 1 paragraf\n3. **Pendahuluan** — Kenapa laporan ini dibikin\n4. **Metodologi** — Gimana lu nyari datanya\n5. **Hasil & Analisis** — Pamerin data, grafik, dan temuan lu\n6. **Kesimpulan** — Wrap up intinya\n7. **Rekomendasi** — Next step-nya apa\n8. **Lampiran** — Data-data tambahan\n\n**Tips:** Banyakin visual kayak grafik atau tabel biar bos lu seneng bacanya.\n\nKalo butuh bantuan nyusun, bisikin aja topiknya ke gue! 📋`;
         }
         if (text.includes('pemasaran') || text.includes('marketing') || text.includes('konten') || text.includes('content') || text.includes('iklan') || text.includes('promosi')) {
-            return `## 📣 Ide Konten & Pemasaran\n\nBerikut strategi konten yang bisa Anda terapkan:\n\n**Tipe Konten Efektif:**\n- 🎥 **Video Pendek** — Reels/TikTok (15-60 detik)\n- 📝 **Carousel** — Tips/edukasi slide-by-slide\n- 📖 **Storytelling** — Cerita di balik brand Anda\n- 🎯 **CTA yang Kuat** — Ajakan bertindak yang jelas\n\n**Formula Copywriting AIDA:**\n1. **Attention** — Judul yang menarik perhatian\n2. **Interest** — Fakta/masalah yang relevan\n3. **Desire** — Solusi yang Anda tawarkan\n4. **Action** — Ajakan untuk bertindak\n\nMau saya buatkan contoh konten untuk produk/jasa spesifik Anda? 🚀`;
+            return `## 📣 Ide Konten & Marketing\n\nBiar konten lu fyp dan jualan laris manis, coba trik ini:\n\n**Tipe Konten yang Lagi Hype:**\n- 🎥 **Video Pendek** — Bikin Reels/TikTok yang hook-nya dapet (15-60 detik)\n- 📝 **Carousel** — Bikin slide tips/edukasi yang ngalir\n- 📖 **Storytelling** — Ceritain struggle atau behind the scene brand lu\n- 🎯 **CTA yang Nendang** — Jangan lupa suruh audiens klik/beli/follow\n\n**Formula Copywriting AIDA:**\n1. **Attention** — Bikin judul yang clickbait tapi jujur\n2. **Interest** — Senggol masalah yang dialamin audiens\n3. **Desire** — Kasih solusi lewat produk/jasa lu\n4. **Action** — Ajak mereka checkout sekarang juga\n\nMau gue bikinin script konten buat brand lu? 🚀`;
         }
 
         // === KEHIDUPAN SEHARI-HARI ===
         if (text.includes('resep') || text.includes('masak') || text.includes('makanan') || text.includes('dapur') || text.includes('menu')) {
-            return `## 🍳 Resep & Masakan\n\nBerikut resep **Nasi Goreng Spesial** yang mudah dan lezat:\n\n### Bahan:\n- 2 piring nasi putih (sisa semalam lebih baik)\n- 2 butir telur\n- 3 siung bawang putih, cincang\n- 5 siung bawang merah, iris\n- 2 sdm kecap manis\n- 1 sdm saus tiram\n- Garam & merica secukupnya\n- Sayuran (sawi, wortel) secukupnya\n\n### Cara Membuat:\n1. Panaskan minyak, tumis bawang hingga harum\n2. Masukkan telur, orak-arik\n3. Tambahkan sayuran, aduk rata\n4. Masukkan nasi, kecap manis, saus tiram\n5. Aduk rata dengan api besar 3-5 menit\n6. Sajikan dengan kerupuk dan acar 🍽️\n\nMau resep lain? Beritahu bahan yang Anda punya!`;
+            return `## 🍳 Resep Anak Kos & Rumahan\n\nNih gue kasih resep **Nasi Goreng Spesial** yang gampang banget bikinnya:\n\n### Bahan-bahan:\n- 2 piring nasi putih (kalo bisa yang sisa semalem, biar gak lembek)\n- 2 butir telor\n- 3 siung bawang putih (cincang)\n- 5 siung bawang merah (iris)\n- 2 sdm kecap manis (sesuai selera)\n- 1 sdm saus tiram\n- Garem & lada secukupnya\n- Sayur-sayuran (sawi, wortel, bebas lah)\n\n### Cara Eksekusi:\n1. Panasin minyak, tumis perbawangan sampe wangi\n2. Cemplungin telor, bikin orak-arik aja\n3. Masukin sayurnya, aduk bentar\n4. Masukin nasinya, tuang kecap sama saus tiram\n5. Aduk pake api gede sekitar 3-5 menitan biar aroma smokey-nya dapet\n6. Beres! Pakein kerupuk makin mantap 🍽️\n\nMau request masakan lain? Coba sebutin lu lagi punya bahan apa aja di kulkas!`;
         }
         if (text.includes('olahraga') || text.includes('fitness') || text.includes('gym') || text.includes('latihan') || text.includes('workout') || text.includes('push up') || text.includes('lari')) {
-            return `## 💪 Tips Olahraga & Fitness\n\n### Program Latihan Pemula (30 menit/hari):\n\n**Senin (Upper Body):**\n- Push-up: 3 × 10 repetisi\n- Plank: 3 × 30 detik\n- Arm circles: 2 × 20\n\n**Rabu (Lower Body):**\n- Squat: 3 × 15\n- Lunges: 3 × 10/kaki\n- Calf raises: 3 × 20\n\n**Jumat (Cardio):**\n- Jogging: 20 menit\n- Jumping jacks: 3 × 30 detik\n- Stretching: 10 menit\n\n**Tips Penting:**\n- 💧 Minum air minimal 2 liter/hari\n- 😴 Tidur 7-8 jam untuk pemulihan otot\n- 🥗 Konsumsi protein setelah latihan\n\nMau program yang lebih spesifik? Beritahu level dan tujuan Anda!`;
+            return `## 💪 Tips Olahraga Biar Fit\n\nNih program *workout* simpel buat pemula, cuma butuh 30 menit sehari:\n\n**Senin (Fokus Atas):**\n- Push-up: 3 × 10 rep\n- Plank: 3 × 30 detik aja (jangan sampe gemeteran parah)\n- Arm circles: 2 × 20\n\n**Rabu (Fokus Bawah):**\n- Squat: 3 × 15 rep\n- Lunges: 3 × 10 per kaki\n- Calf raises (jinjit-jinjit): 3 × 20\n\n**Jumat (Bakar Kalori/Cardio):**\n- Jogging santai: 20 menit\n- Jumping jacks: 3 × 30 detik\n- Stretching: 10 menit biar nggak kram\n\n**Catetan Penting Ngab:**\n- 💧 Jangan kurang minum air putih (min 2 liter)\n- 😴 Tidur yang cukup (7-8 jam) biar otot lu *recovery*\n- 🥗 Makan protein yang bener abis nge-gym\n\nKalo lu pengen program yang lebih *hardcore*, bilang aja goal lu apa!`;
         }
         if (text.includes('liburan') || text.includes('wisata') || text.includes('travel') || text.includes('jalan-jalan') || text.includes('destinasi') || text.includes('hotel')) {
-            return `## ✈️ Rencana Liburan\n\nBerikut rekomendasi destinasi wisata populer di Indonesia:\n\n### 🏖️ Pantai & Alam:\n- **Bali** — Raja Ampat, Nusa Penida, Uluwatu\n- **Lombok** — Gili Trawangan, Pantai Kuta\n- **Labuan Bajo** — Pulau Komodo, Pink Beach\n\n### 🏔️ Pegunungan:\n- **Bromo** — Sunrise terbaik di Jawa\n- **Dieng** — Kawah, telaga, budaya\n- **Bandung** — Kawah Putih, Tangkuban Perahu\n\n### 🏛️ Budaya & Kota:\n- **Yogyakarta** — Borobudur, Prambanan, Malioboro\n- **Solo** — Keraton, Batik, kuliner\n\n**Tips Hemat:**\n- Booking jauh hari untuk harga terbaik\n- Pilih hari kerja untuk menghindari keramaian\n- Gunakan transportasi lokal\n\nMau saya buatkan itinerary detail untuk destinasi tertentu? 🗺️`;
+            return `## ✈️ Rencana Liburan & Healing\n\nLagi butuh *healing*? Nih beberapa tempat yang asik banget buat dikunjungin:\n\n### 🏖️ Anak Pantai:\n- **Bali** — Nusa Penida, Canggu, Uluwatu (buat sunsetan)\n- **Lombok** — Gili Trawangan (vibes-nya chill banget)\n- **Labuan Bajo** — Pulau Komodo, Pink Beach\n\n### 🏔️ Anak Gunung:\n- **Bromo** — Berburu sunrise paling epik\n- **Dieng** — Suasana adem, pemandangan gokil\n- **Bandung** — Kawah Putih, Lembang, pas buat kabur dari panas kota\n\n### 🏛️ Kuliner & Budaya:\n- **Yogyakarta** — Angkringan, Malioboro, nyantai poll\n- **Solo** — Kulineran murah meriah mantap\n\n**Tips Liburan Hemat:**\n- Pesen tiket dari jauh-jauh hari bro\n- Liburan pas *weekdays* aja biar nggak sumpek\n- Sewa motor lokal lebih asik buat keliling\n\nMau gue susunin itinerary per hari? Sebutin aja kotanya! 🗺️`;
         }
         if (text.includes('kesehatan') || text.includes('sakit') || text.includes('obat') || text.includes('diet') || text.includes('gizi') || text.includes('nutrisi') || text.includes('vitamin')) {
-            return `## 🏥 Tips Kesehatan\n\n**Kebiasaan Sehat yang Penting:**\n\n1. 💧 **Hidrasi** — Minum 8 gelas air per hari\n2. 🥗 **Nutrisi Seimbang** — Penuhi gizi: karbohidrat, protein, lemak sehat, serat\n3. 😴 **Tidur Berkualitas** — 7-9 jam per malam\n4. 🏃 **Olahraga Rutin** — Minimal 150 menit/minggu\n5. 🧘 **Kelola Stres** — Meditasi, hobi, quality time\n\n**Vitamin Penting:**\n- Vitamin C — Daya tahan tubuh (jeruk, jambu)\n- Vitamin D — Tulang kuat (sinar matahari pagi)\n- Vitamin B12 — Energi (daging, telur, susu)\n\n> ⚠️ *Disclaimer: Saya bukan pengganti dokter. Untuk keluhan serius, segera konsultasi ke tenaga medis profesional.*\n\nAda pertanyaan kesehatan spesifik?`;
+            return `## 🏥 Tips Kesehatan & Wellness\n\nBiar badan lu tetep fit dan nggak gampang drop, coba biasain ini:\n\n1. 💧 **Hidrasi** — Air putih itu kunci, minimal 8 gelas sehari ngab\n2. 🥗 **Makan Bener** — Jangan indomie mulu, tambahin protein & serat\n3. 😴 **Tidur Cukup** — Begadang jangan keseringan, usahain 7-9 jam\n4. 🏃 **Gerak Dikit** — Jalan kaki kek, sepedaan kek, minimal 150 menit seminggu\n5. 🧘 **Jangan Stres** — Sempetin waktu buat lakuin hobi lu biar waras\n\n**Vitamin Asik Buat Tubuh:**\n- Vit C — Biar kebal penyakit (jeruk, jambu)\n- Vit D — Dapet dari nongkrong pagi-pagi kena matahari\n- Vit B12 — Biar nggak lemes (daging, telor)\n\n> ⚠️ *Disclaimer: Gue cuma AI cerdas, bukan dokter beneran. Kalo lu ngerasa sakit parah, buruan ke klinik ya!*\n\nAda keluhan apa nih, bro?`;
         }
-        if (text.includes('motivasi') || text.includes('semangat') || text.includes('sedih') || text.includes('galau') || text.includes('stress') || text.includes('bosan')) {
-            return `## 💫 Kata Motivasi\n\n> *"Kamu tidak harus sempurna untuk memulai. Tapi kamu harus memulai untuk menjadi lebih baik."*\n\n---\n\nBeberapa hal yang bisa membantu:\n\n1. 🎯 **Tetapkan tujuan kecil** — Mulai dari yang mudah dicapai\n2. 📝 **Tulis 3 hal yang disyukuri** setiap hari\n3. 🚶 **Bergerak** — Jalan kaki 15 menit bisa mengubah mood\n4. 🎵 **Dengarkan musik** yang membangkitkan semangat\n5. 💬 **Ceritakan** perasaanmu ke orang terdekat\n\n*Ingat: Setiap orang punya ritme masing-masing. Tidak apa-apa untuk istirahat sejenak.* Kamu sudah melakukan yang terbaik! 🌟\n\nMau cerita lebih lanjut? Saya di sini untuk mendengarkan.`;
+        if (text.includes('motivasi') || text.includes('semangat') || text.includes('sedih') || text.includes('galau') || text.includes('stress') || text.includes('bosan') || text.includes('curhat') || text.includes('cerita') || text.includes('pusing') || text.includes('capek')) {
+            return `Waelah, lu lagi galau atau mumet yak? Pundung amat idup lu.\n\nYaudah, tumpahin aja bacotan lu di mari. Gue dengerin dah tanpa nge-judge. Keluarin aja semuanya anjir biar otak lu agak plong! Gue stay di sini nungguin lu curhat. 🌟`;
         }
 
         // === TEKNIS & CODING ===
@@ -597,12 +603,41 @@ document.addEventListener('DOMContentLoaded', () => {
             return getGeneralMock();
         }
         if (text.includes('database') || text.includes('sql') || text.includes('mongodb')) {
-            return `## 🗄️ Database\n\nMemilih database yang tepat sangat krusial:\n\n- **PostgreSQL/MySQL** — Data terstruktur, transaksi ACID\n- **MongoDB** — Skema fleksibel, berbasis dokumen\n- **Redis** — Caching & antrean berkecepatan tinggi\n\nIngin saya buatkan contoh skema untuk proyek Anda?`;
+            return `## 🗄️ Database\n\nMilih database yang pas itu ngaruh banget buat masa depan aplikasi lu:\n\n- **PostgreSQL/MySQL** — Kalo data lu terstruktur & butuh keamanan transaksi level dewa\n- **MongoDB** — Buat data lu yang bentuknya JSON/dinamis banget\n- **Redis** — Buat ngakalin loading lemot, dipake buat *caching*\n\nMau gue bikinin contoh skemanya nggak nih?`;
+        }
+
+        // === CASUAL / CHITCHAT ===
+        if (text.match(/(anjing|bangsat|tolol|goblok|kontol|memek|asu|babi|ngegas)/)) {
+            return `Santai anjir, nggak usah ngegas! Lu lagi emosi apa gimana nih? Kalo ada masalah, cerita aja pelan-pelan ke gue, nggak usah pake urat. Gue dengerin kok.`;
+        }
+        if (text.match(/(mabar|game|valorant|ml|pubg|ff|epep)/)) {
+            return `Wuih bahas game nih! Lu lagi push rank apa sekedar seneng-seneng doang? Gue sih pengennya mabar, sayang gue cuma AI yang nyangkut di server. Lu main apaan emang?`;
+        }
+        if (text.match(/(uang|duit|miskin|pinjol|cuan|gajian|bokek)/)) {
+            return `Ngomongin duit emang sensitif ngab. Lagi bokek apa lagi nunggu gajian nih lu? Inget ya, nyari cuan emang susah, tapi jangan sampe tergoda pinjol ilegal, bahaya anjir! Kalo lu butuh ide bisnis atau freelance, gue bisa bantu cariin tuh.`;
+        }
+        if (text.match(/(cinta|pacar|cewek|cowok|putus|selingkuh|bucin|jomblo|nikah)/)) {
+            return `Ciee bahas asmara nih! Gimana gimana? Lagi bucin, galau abis putus, apa masih betah jomblo? Cinta emang kadang bikin pusing anjir, tapi dari situ lu belajar dewasa. Mau curhat soal si doi? Sini tumpahin aja!`;
+        }
+        if (text.match(/(gimana|kenapa|ngapa|kok bisa|cara|ajarin)/) && !text.includes('coding')) {
+            return `Hmm, pertanyaan bagus tuh. Semuanya pasti ada sebab akibatnya ngab. Tapi jujur, tanpa konteks yang jelas, gue susah ngasih jawaban pasti. Coba jelasin dikit lagi soal apaan nih maksud lu?`;
+        }
+        if (text.match(/^(iya|yoi|bener|setuju|mantap|keren|oke|sip|ok|oklah)$/)) {
+            return `Yoi mantap kan! Terus abis itu lu mau ngapain lagi nih? Gue siap bantu hal lain kalo lu masih butuh.`;
+        }
+        if (text.match(/^(nggak|gak|enggak|g|boong|bacot|gajelas|gaje)$/)) {
+            return `Idih ngegas lu. Yaudah kalo nggak yaudah, gue kan cuma nanya. Mau bahas yang lain aja nggak nih?`;
         }
 
         // Fallback — universal response
         const personalized = userName ? `, ${userName}` : '';
-        return `Terima kasih atas pertanyaannya${personalized}! 😊\n\nSaya menganalisis pesan Anda:\n> *"${input}"*\n\nSebagai **AI TREBE**, saya bisa membantu berbagai hal:\n- 📚 Edukasi (matematika, fisika, sejarah, bahasa)\n- 💼 Pekerjaan (email, laporan, ide bisnis)\n- 💻 Teknis (coding, debugging)\n- 🍳 Kehidupan (resep, liburan, kesehatan, olahraga)\n\nBisa Anda berikan detail lebih lanjut agar saya bisa memberikan jawaban yang lebih spesifik?`;
+        
+        // If the input is very short (e.g. just a typo or 1-2 words)
+        if (input.trim().split(/\s+/).length <= 3) {
+            return `Maksud lu apaan sih nyet${personalized}? Ketik yang bener napa, otak gue lagi loading nih bacot amat lu. Coba jelasin lagi!`;
+        }
+        
+        return `Wah gila menarik juga omongan lu${personalized}! 😊\n\nGue liat lu lagi ngebahas: *"${input}"*.\n\nLu mau gue jawabin beneran, ngasih solusi, atau emang murni pengen bacot dan nyantai aja soal ini? Jelasin dikit lagi kek, biar gue bisa nyambung anjir!`;
     }
 
     // --- Mock Data Generators (Structured Output) ---
